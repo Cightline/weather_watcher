@@ -7,6 +7,8 @@ Fill in the information. You need an API key from Wunderground
 
 Add it to crontab
 
+`mkdir ~/.weather_watcher`
+
 It should start writing weather information to ~/.weather_watcher
 
 MAINLY FOR MY OWN PERSONAL USE
