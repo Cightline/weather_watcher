@@ -3,15 +3,17 @@ import requests
 import os
 import json
 
+
+home          = os.getenv('HOME')
+config_path   = '%s/.config/weather_watcher/config.json' % (home)
+
 with open(config_path, 'r') as cfg:
     config = json.load(cfg)
 
 api_key       = config['api_key']
 state         = config['state']
 city          = config['city']
-home          = os.getenv('HOME')
 weather_dir   = '%s/.weather_watcher' % (home)
-config_path   = '%s/.config/weather_wather/config.json'
 values_to_write = ['weather','temp_f', "precip_today_in"]
 pango         = True
 
