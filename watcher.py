@@ -3,6 +3,7 @@ import requests
 import os
 import json
 
+from pushbullet import Pushbullet
 
 home          = os.getenv('HOME')
 config_path   = '%s/.config/weather_watcher/config.json' % (home)
@@ -10,6 +11,7 @@ config_path   = '%s/.config/weather_watcher/config.json' % (home)
 with open(config_path, 'r') as cfg:
     config = json.load(cfg)
 
+pb              = Pushbullet(config['pushbullet_api_key'])
 api_key         = config['api_key']
 state           = config['state']
 city            = config['city']
@@ -33,42 +35,28 @@ def get_page(url):
     return page.json()
 
 
-def write_to_file(base_path, data):
-    with open('%s/%s' % (weather_dir, base_path), 'w') as f:
-
-        try:
-            to_write = str(int(data))
-
-        except:
-            to_write = str(data).strip()
-            
-            
-        f.write(to_write)
-
-
 
 condition_data = get_page(condition_url)['current_observation']
-
-
-for item in values_to_write:
-    write_to_file(item, condition_data[item])
 
 
 a = get_page(alert_url)['alerts']
 
 if not a:
-    alert_data = "none"
+    print('No alerts')
+    exit()
+
 
 else:
-    if color:
-        alert_data = "%%{F#f00} %s" % (get_page(alert_url)['alerts'][0]['description'])
-        print(alert_data)
+    alert_data = []
+    data = (get_page(alert_url)['alerts'])
+    
+    for alert in data:
+        print(alert)
 
-    else:
-        alert_data = "%s" % (get_page(alert_url)['alerts'])
+        #pb.push_note('Weather Alert: %s' % (alert['type'], 
+        #                                    alert['description'],
+        #                                    alert['message']))
+
+        pb.push_note(alert['description'], alert['message'])
 
 
-
-
-
-write_to_file('alerts', alert_data)
