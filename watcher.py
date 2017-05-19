@@ -10,15 +10,15 @@ config_path   = '%s/.config/weather_watcher/config.json' % (home)
 with open(config_path, 'r') as cfg:
     config = json.load(cfg)
 
-api_key       = config['api_key']
-state         = config['state']
-city          = config['city']
-weather_dir   = '%s/.weather_watcher' % (home)
+api_key         = config['api_key']
+state           = config['state']
+city            = config['city']
+weather_dir     = '%s/.weather_watcher' % (home)
 values_to_write = ['weather','temp_f', "precip_today_in"]
-pango         = True
+color           = True
 
-alert_url     = 'http://api.wunderground.com/api/%s/alerts/q/%s/%s.json' % (api_key, state, city)
-condition_url = 'http://api.wunderground.com/api/%s/conditions/q/%s/%s.json' % (api_key, state, city)
+alert_url       = 'http://api.wunderground.com/api/%s/alerts/q/%s/%s.json' % (api_key, state, city)
+condition_url   = 'http://api.wunderground.com/api/%s/conditions/q/%s/%s.json' % (api_key, state, city)
 
 
 
@@ -40,7 +40,7 @@ def write_to_file(base_path, data):
             to_write = str(int(data))
 
         except:
-            to_write = str(data).strip().lower()
+            to_write = str(data).strip()
             
             
         f.write(to_write)
@@ -60,8 +60,9 @@ if not a:
     alert_data = "none"
 
 else:
-    if pango:
-        alert_data = "<span color='red'>%s</span>" % (get_page(alert_url)['alerts'][0]['description'])
+    if color:
+        alert_data = "%%{F#f00} %s" % (get_page(alert_url)['alerts'][0]['description'])
+        print(alert_data)
 
     else:
         alert_data = "%s" % (get_page(alert_url)['alerts'])
